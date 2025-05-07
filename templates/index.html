@@ -4,143 +4,100 @@
   <meta charset="UTF-8">
   <title>Batman File Sharing</title>
   <style>
-    /* Global Styling */
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #111;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       color: #eee;
-      padding: 30px;
+      padding: 20px;
       text-align: center;
     }
     h1 {
       color: #ffcc00;
-      font-size: 3em;
-      text-transform: uppercase;
-      letter-spacing: 5px;
-      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ffcc00aa;
     }
-
-    /* Logo Styling with Neon Glow */
     img.logo {
-      width: 150px;
+      width: 100px;
+      margin-bottom: 20px;
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    form {
       margin-bottom: 30px;
-      transition: transform 0.3s ease, filter 0.3s ease;
     }
-    
-    img.logo:hover {
-      transform: scale(1.1);
-      filter: brightness(1.2) contrast(1.5);
-      box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 30px #ffcc00;
-    }
-
-    /* Neon Glowing Effect for Elements */
-    @keyframes neonGlow {
-      0% {
-        box-shadow: 0 0 5px #ff0033, 0 0 10px #ff0033, 0 0 15px #ff0033, 0 0 20px #ff0033, 0 0 25px #ff0033, 0 0 30px #ff0033, 0 0 35px #ff0033;
-      }
-      50% {
-        box-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff, 0 0 15px #00bfff, 0 0 20px #00bfff, 0 0 25px #00bfff, 0 0 30px #00bfff, 0 0 35px #00bfff;
-      }
-      100% {
-        box-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493, 0 0 15px #ff1493, 0 0 20px #ff1493, 0 0 25px #ff1493, 0 0 30px #ff1493, 0 0 35px #ff1493;
-      }
-    }
-
-    /* Neon Glow Effect for Input Fields */
     input[type="file"],
     input[type="submit"],
     input[type="text"] {
       padding: 10px;
-      margin: 15px 0;
-      border-radius: 10px;
-      border: 2px solid transparent;
-      background: transparent;
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      outline: none;
-      animation: neonGlow 1.5s infinite alternate;
-      width: 250px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
     }
-
     input[type="submit"] {
       background-color: #ffcc00;
       color: #000;
       cursor: pointer;
+      box-shadow: 0 4px 6px rgba(255, 204, 0, 0.4);
     }
-
     input[type="submit"]:hover {
-      background-color: #ff9900;
+      background-color: #e6b800;
     }
-
-    /* Neon Glow for Table Cells */
-    table, th, td {
-      border: 1px solid transparent;
-      border-radius: 10px;
-      box-shadow: 0 0 5px #ff0033, 0 0 10px #ff0033, 0 0 15px #ff0033;
-      animation: neonGlow 1.5s infinite alternate;
-    }
-
     table {
-      margin: 30px auto;
+      margin: 0 auto;
       border-collapse: collapse;
       width: 60%;
-      background-color: #222;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 10px #000;
     }
-
     th, td {
       padding: 12px;
-      text-align: center;
+      border: 1px solid #444;
     }
-
     tr:hover {
-      background-color: #333;
+      background-color: #222;
     }
-
     a {
       color: #66ccff;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
-    }
-
-    /* Search Input Styling */
-    input[type="text"] {
-      width: 300px;
-      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Classy Batman Logo -->
-  <img src="{{ url_for('static', filename='batman.png') }}" alt="Batman Logo" class="logo">
-
-  <!-- Page Title -->
+  <img src="static/batman.png" alt="Batman Logo" class="logo">
   <h1>Batman File Sharing</h1>
 
-  <!-- File Upload Form -->
   <form method="post" enctype="multipart/form-data">
     <input type="file" name="file" required>
     <input type="submit" value="Upload File">
   </form>
 
-  <!-- Search Bar -->
   <form method="get" action="/">
     <input type="text" name="search" placeholder="Search files..." value="{{ search_query }}">
     <input type="submit" value="Search">
   </form>
 
-  <!-- Display Upload Message -->
   {% if message %}
     <p>{{ message|safe }}</p>
   {% endif %}
 
-  <!-- Display Uploaded Files Table -->
-  {% if filename %}
-    <h2>Your uploaded file: <a href="{{ url_for('uploaded_file', filename=filename) }}" download>{{ filename }}</a></h2>
+  {% if files %}
+    <table>
+      <tr><th>File Name</th><th>Download</th></tr>
+      {% for file in files %}
+        <tr>
+          <td>{{ file }}</td>
+          <td><a href="{{ url_for('download_file', filename=file) }}" download>Download</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No files found.</p>
   {% endif %}
-  
 </body>
 </html>
