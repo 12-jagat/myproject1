@@ -2,3 +2,5 @@ echo .env> .gitignore
 echo .streamlit/secrets.toml>> .gitignore
 echo *.db>> .gitignore
 echo __pycache__/>> .gitignore
+.streamlit/secrets.toml
+
